@@ -4,12 +4,22 @@ import "../../styles/node.css";
 /**
  * Base Node component
  */
-export default function Node({ label, type, onAdd }) {
+export default function Node({
+  label,
+  type,
+  onAddAction,
+  onAddBranch
+}) {
   return (
     <div className={`node node-${type}`}>
       <span className="node-label">{label}</span>
 
-      {onAdd && <NodeControls onAdd={onAdd} />}
+      {type !== "end" && (
+        <NodeControls
+          onAddAction={onAddAction}
+          onAddBranch={onAddBranch}
+        />
+      )}
     </div>
   );
 }
