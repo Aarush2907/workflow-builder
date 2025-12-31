@@ -1,10 +1,14 @@
+import { useWorkflow } from "../hooks/useWorkflow";
 import "../styles/canvas.css";
 
 export default function Canvas() {
+  const { state } = useWorkflow();
   return (
     <div className="canvas">
       <h1>Workflow Builder</h1>
-      <p>Start building your workflow</p>
+
+      {/* Temporary: show workflow state */}
+      <pre>{JSON.stringify(state, null, 2)}</pre>
     </div>
   );
 }
