@@ -47,3 +47,21 @@
 .node-controls button:hover {
   background: #334155;
 }
+
+.branch-children {
+  display: flex;
+  gap: 60px;
+  margin-top: 30px;
+}
+
+.branch-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.branch-label {
+  font-size: 12px;
+  margin-bottom: 10px;
+  color: #94a3b8;
+}
