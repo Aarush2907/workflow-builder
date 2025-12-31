@@ -31,3 +31,19 @@
   display: flex;
   gap: 40px;
 }
+
+.node-controls {
+  margin-top: 10px;
+}
+
+.node-controls button {
+  background: #1e293b;
+  color: #e5e7eb;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.node-controls button:hover {
+  background: #334155;
+}
