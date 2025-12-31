@@ -1,10 +1,8 @@
-/**
- * Node controls (Add button)
- */
-export default function NodeControls({ onAdd }) {
+export default function NodeControls({ onAddAction, onAddBranch }) {
   return (
     <div className="node-controls">
-      <button onClick={onAdd}>+ Add Step</button>
+      <button onClick={onAddAction}>+ Action</button>
+      <button onClick={onAddBranch}>+ Branch</button>
     </div>
   );
 }
