@@ -1,4 +1,6 @@
 import { useReducer } from "react";
+import { generateNodeId } from "../utils/idGenerator";
+
 
 const initialState = {
     nodes : {
@@ -37,6 +39,34 @@ function workflowReducer(state, action) {
       };
     }
 
+    case "ADD_BRANCH_NODE": {
+  const { parentId } = action.payload;
+  const newNodeId = generateNodeId("branch");
+
+  const parentNode = state.nodes[parentId];
+
+  return {
+    ...state,
+    nodes: {
+      ...state.nodes,
+
+      [newNodeId]: {
+        id: newNodeId,
+        type: "branch",
+        label: "Condition",
+        branches: {
+          true: null,
+          false: null
+        }
+      },
+
+      [parentId]: {
+        ...parentNode,
+        next: [...(parentNode.next || []), newNodeId]
+      }
+    }
+  };
+}
 
     
     default:
