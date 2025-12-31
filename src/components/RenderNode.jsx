@@ -45,27 +45,42 @@ export default function RenderNode({ nodeId, nodes, dispatch }) {
       )}
 
       {/* BRANCH children */}
-      {node.type === "branch" && (
-        <div className="branch-children">
-          {Object.entries(node.branches).map(
-            ([branchKey, childId]) => (
-              <div key={branchKey} className="branch-column">
-                <div className="branch-label">
-                  {branchKey.toUpperCase()}
-                </div>
+{node.type === "branch" && (
+  <div className="branch-children">
+    {Object.entries(node.branches).map(
+      ([branchKey, childId]) => (
+        <div key={branchKey} className="branch-column">
+          <div className="branch-label">
+            {branchKey.toUpperCase()}
+          </div>
 
-                {childId && (
-                  <RenderNode
-                    nodeId={childId}
-                    nodes={nodes}
-                    dispatch={dispatch}
-                  />
-                )}
-              </div>
-            )
+          {childId ? (
+            <RenderNode
+              nodeId={childId}
+              nodes={nodes}
+              dispatch={dispatch}
+            />
+          ) : (
+            <button
+              className="branch-add-btn"
+              onClick={() =>
+                dispatch({
+                  type: "ADD_ACTION_TO_BRANCH",
+                  payload: {
+                    branchId: nodeId,
+                    branchKey
+                  }
+                })
+              }
+            >
+              + Add Step
+            </button>
           )}
         </div>
-      )}
+      )
+    )}
+  </div>
+  )}
     </div>
   );
 }
