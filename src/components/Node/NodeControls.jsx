@@ -1,8 +1,21 @@
-export default function NodeControls({ onAddAction, onAddBranch }) {
+export default function NodeControls({
+  onAddAction,
+  onAddBranch,
+  onDelete
+}) {
   return (
     <div className="node-controls">
-      <button onClick={onAddAction}>+ Action</button>
-      <button onClick={onAddBranch}>+ Branch</button>
+      {onAddAction && (
+        <button onClick={onAddAction}>+ Action</button>
+      )}
+      {onAddBranch && (
+        <button onClick={onAddBranch}>+ Branch</button>
+      )}
+      {onDelete && (
+        <button className="danger" onClick={onDelete}>
+          Delete
+        </button>
+      )}
     </div>
   );
-}
+} 
