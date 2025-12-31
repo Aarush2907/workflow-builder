@@ -2,18 +2,27 @@ import Node from "./Node/Node";
 
 /**
  * Recursive node renderer
- * Renders a node and then its children
  */
-export default function RenderNode({ nodeId, nodes }) {
+export default function RenderNode({ nodeId, nodes, dispatch }) {
   const node = nodes[nodeId];
 
   if (!node) return null;
 
+  const handleAdd = () => {
+    dispatch({
+      type: "ADD_ACTION_NODE",
+      payload: { parentId: nodeId }
+    });
+  };
+
   return (
     <div className="node-wrapper">
-      <Node label={node.label} type={node.type} />
+      <Node
+        label={node.label}
+        type={node.type}
+        onAdd={node.type !== "end" ? handleAdd : null}
+      />
 
-      {/* Render children (for now, only 'next') */}
       {node.next && node.next.length > 0 && (
         <div className="node-children">
           {node.next.map((childId) => (
@@ -21,6 +30,7 @@ export default function RenderNode({ nodeId, nodes }) {
               key={childId}
               nodeId={childId}
               nodes={nodes}
+              dispatch={dispatch}
             />
           ))}
         </div>
