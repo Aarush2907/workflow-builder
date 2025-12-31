@@ -68,6 +68,34 @@ function workflowReducer(state, action) {
   };
 }
 
+case "ADD_ACTION_TO_BRANCH": {
+  const { branchId, branchKey } = action.payload;
+  const newNodeId = generateNodeId("action");
+
+  const branchNode = state.nodes[branchId];
+
+  return {
+    ...state,
+    nodes: {
+      ...state.nodes,
+
+      [newNodeId]: {
+        id: newNodeId,
+        type: "action",
+        label: "New Action",
+        next: []
+      },
+
+      [branchId]: {
+        ...branchNode,
+        branches: {
+          ...branchNode.branches,
+          [branchKey]: newNodeId
+        }
+      }
+    }
+  };
+}
     
     default:
       return state;
