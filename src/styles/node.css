@@ -1,0 +1,20 @@
+.node {
+  padding: 12px 20px;
+  background: #020617;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  min-width: 120px;
+  text-align: center;
+  color: #e5e7eb;
+}
+
+.node-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Special styling for start node */
+.node-start {
+  background: #022c22;
+  border-color: #10b981;
+}
