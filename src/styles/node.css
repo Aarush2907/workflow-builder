@@ -77,3 +77,13 @@
 .branch-add-btn:hover {
   background: #334155;
 }
+
+.node-controls .danger {
+  background: #7f1d1d;
+  color: #fecaca;
+}
+
+.node-controls .danger:hover {
+  background: #991b1b;
+}
+
