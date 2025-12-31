@@ -3,7 +3,7 @@ import RenderNode from "./RenderNode";
 import "../styles/canvas.css";
 
 export default function Canvas() {
-  const { state } = useWorkflow();
+  const { state, dispatch } = useWorkflow();
 
   return (
     <div className="canvas">
@@ -13,6 +13,7 @@ export default function Canvas() {
         <RenderNode
           nodeId={state.rootId}
           nodes={state.nodes}
+          dispatch={dispatch}
         />
       </div>
     </div>
