@@ -24,11 +24,17 @@ export default function RenderNode({ nodeId, nodes, dispatch }) {
   return (
     <div className="node-wrapper">
       <Node
-        label={node.label}
-        type={node.type}
-        onAddAction={addAction}
-        onAddBranch={addBranch}
-      />
+  label={node.label}
+  type={node.type}
+  onAddAction={addAction}
+  onAddBranch={node.type !== "branch" ? addBranch : null}
+  onDelete={() =>
+    dispatch({
+      type: "DELETE_NODE",
+      payload: { nodeId }
+    })
+  }
+/>
 
       {/* ACTION children */}
       {node.next && node.next.length > 0 && (
