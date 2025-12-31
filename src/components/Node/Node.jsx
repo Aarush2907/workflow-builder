@@ -14,7 +14,7 @@ export default function Node({
     <div className={`node node-${type}`}>
       <span className="node-label">{label}</span>
 
-      {type !== "end" && (
+      {type !== "end" && type !== "branch" && (
         <NodeControls
           onAddAction={onAddAction}
           onAddBranch={onAddBranch}
