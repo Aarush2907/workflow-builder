@@ -2,3 +2,9 @@
   min-height: 100vh;
   padding: 40px;
 }
+
+.canvas-content {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
