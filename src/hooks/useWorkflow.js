@@ -67,6 +67,28 @@ function workflowReducer(state, action) {
       };
     }
 
+    case "ADD_END_NODE": {
+      const { parentId } = action.payload;
+      const newNodeId = generateNodeId("end");
+
+      return {
+        ...state,
+        nodes: {
+          ...state.nodes,
+          [newNodeId]: {
+            id: newNodeId,
+            type: "end",
+            label: "End",
+            next: [] // End nodes technically don't have next, but keeping empty array is safe for consistency
+          },
+          [parentId]: {
+            ...state.nodes[parentId],
+            next: [...(state.nodes[parentId].next || []), newNodeId]
+          }
+        }
+      };
+    }
+
     case "ADD_ACTION_TO_BRANCH": {
       const { branchId, branchKey } = action.payload;
       const newNodeId = generateNodeId("action");
@@ -89,6 +111,31 @@ function workflowReducer(state, action) {
             ...branchNode,
             branches: {
               ...branchNode.branches,
+              [branchKey]: newNodeId
+            }
+          }
+        }
+      };
+    }
+
+    case "ADD_END_TO_BRANCH": {
+      const { branchId, branchKey } = action.payload;
+      const newNodeId = generateNodeId("end");
+
+      return {
+        ...state,
+        nodes: {
+          ...state.nodes,
+          [newNodeId]: {
+            id: newNodeId,
+            type: "end",
+            label: "End",
+            next: []
+          },
+          [branchId]: {
+            ...state.nodes[branchId],
+            branches: {
+              ...state.nodes[branchId].branches,
               [branchKey]: newNodeId
             }
           }
@@ -147,21 +194,32 @@ function workflowReducer(state, action) {
 
         // Parent is branch
         if (updatedParentNode.type === "branch") {
-          // If parent is branch, we need to check branches as well because 
-          // a branch node can be a parent in two ways: via 'next' (unlikely for branch?) 
-          // or via 'branches'. The search logic above found it via one of them.
-          // BUT: The search logic priority: 
-          // 1. node.next.includes(nodeId)
-          // 2. node.branches...
-
-          // If we found it via 'next', we updated 'next' above.
-          // If we found it via 'branches', we need to update 'branches'.
-
           for (const key in updatedParentNode.branches) {
             if (updatedParentNode.branches[key] === nodeId) {
               updatedParentNode.branches = {
                 ...updatedParentNode.branches,
                 [key]: childIds[0] || null
+              };
+            }
+          }
+        }
+      }
+
+      // Handle End node deletion
+      if (nodeToDelete.type === "end") {
+        // Parent is action/start
+        if (updatedParentNode.next) {
+          updatedParentNode.next = updatedParentNode.next
+            .filter(id => id !== nodeId);
+        }
+
+        // Parent is branch
+        if (updatedParentNode.type === "branch") {
+          for (const key in updatedParentNode.branches) {
+            if (updatedParentNode.branches[key] === nodeId) {
+              updatedParentNode.branches = {
+                ...updatedParentNode.branches,
+                [key]: null
               };
             }
           }

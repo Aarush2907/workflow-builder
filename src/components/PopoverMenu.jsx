@@ -46,6 +46,15 @@ export default function PopoverMenu({ position, onClose, onSelect }) {
             >
                 + Add Condition
             </button>
+            <div style={{ height: "1px", background: "#e2e8f0", margin: "4px 0" }}></div>
+            <button
+                style={{ ...itemStyle, color: "#ef4444" }}
+                onMouseEnter={(e) => e.target.style.background = "#fef2f2"}
+                onMouseLeave={(e) => e.target.style.background = "transparent"}
+                onClick={() => { onSelect("end"); onClose(); }}
+            >
+                ⏹ End Flow
+            </button>
         </div>
     );
 }

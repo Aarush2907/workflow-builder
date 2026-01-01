@@ -61,6 +61,11 @@
   border-top: 4px solid #f59e0b;
 }
 
+.node-end {
+  border-top: 4px solid #ef4444;
+  background-color: #fafafa;
+}
+
 .node-wrapper {
   display: flex;
   flex-direction: column;
