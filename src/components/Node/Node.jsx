@@ -14,8 +14,8 @@ export default function Node({
   const [isEditing, setIsEditing] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [editValue, setEditValue] = useState(label);
-  const inputRef = useRef(null); // specific input ref
-  const nodeRef = useRef(null);  // container ref for connections
+  const inputRef = useRef(null);
+  const nodeRef = useRef(null);
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -23,7 +23,7 @@ export default function Node({
     }
   }, [isEditing]);
 
-  // Register node for connections
+
   useLayoutEffect(() => {
     if (registerNode && nodeRef.current) {
       registerNode(nodeId, nodeRef.current);
@@ -78,7 +78,7 @@ export default function Node({
           </span>
         )}
 
-        {/* Delete Button (Top Right) */}
+
         {type !== "start" && (
           <button
             className="delete-btn"
@@ -90,7 +90,7 @@ export default function Node({
         )}
       </div>
 
-      {/* Connection Point (Add Button) */}
+
       {onAddStep && (
         <div style={{ position: "relative" }}>
           <button
@@ -103,7 +103,7 @@ export default function Node({
 
           {showPopover && (
             <PopoverMenu
-              position={{ x: -60, y: 15 }} // Relative to button
+              position={{ x: -60, y: 15 }}
               onClose={() => setShowPopover(false)}
               onSelect={onAddStep}
             />

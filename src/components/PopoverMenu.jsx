@@ -1,5 +1,5 @@
 export default function PopoverMenu({ position, onClose, onSelect }) {
-    // Simple style for the popover
+
     const style = {
         position: "absolute",
         left: position.x,

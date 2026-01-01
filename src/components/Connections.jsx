@@ -1,8 +1,6 @@
 import { useState, useLayoutEffect, useEffect } from "react";
 
-/**
- * Renders SVG connections between nodes
- */
+
 export default function Connections({ nodes, nodeRefs }) {
     const [lines, setLines] = useState([]);
 
@@ -21,10 +19,10 @@ export default function Connections({ nodes, nodeRefs }) {
             // Calculate relative position to canvas content
             return {
                 x: rect.left - parentRect.left + rect.width / 2,
-                y: rect.top - parentRect.top, // Top for incoming
+                y: rect.top - parentRect.top,
                 w: rect.width,
                 h: rect.height,
-                bottomY: rect.bottom - parentRect.top // Bottom for outgoing
+                bottomY: rect.bottom - parentRect.top
             };
         };
 
@@ -32,12 +30,6 @@ export default function Connections({ nodes, nodeRefs }) {
 
         // Observe all nodes for size changes
         const resizeObserver = new ResizeObserver(() => {
-            // Force re-render/re-calc
-            // In a real app we might want to debounce this or be more selective
-            // But for this assignment, triggering a re-calc is fine.
-            // We can just rely on the layout effect running again if we trigger state update?
-            // Actually, we need to trigger a re-render. 
-            // Let's just re-run the calculation logic.
             calculateLines();
         });
 
@@ -51,7 +43,7 @@ export default function Connections({ nodes, nodeRefs }) {
                 const startCoords = getCoords(node.id);
                 if (!startCoords) return;
 
-                // Connections from Actions/Start
+
                 if (node.type !== "branch" && node.next) {
                     node.next.forEach(childId => {
                         const endCoords = getCoords(childId);
@@ -68,15 +60,13 @@ export default function Connections({ nodes, nodeRefs }) {
                     });
                 }
 
-                // Connections from Branches
+
                 if (node.type === 'branch' && node.branches) {
                     Object.entries(node.branches).forEach(([key, childId]) => {
                         if (!childId) return;
 
                         const endCoords = getCoords(childId);
                         if (endCoords) {
-                            // Find the branch label position? 
-                            // For now, render curve from parent bottom to child top
                             calculatedLines.push({
                                 id: `${node.id}-${childId}-${key}`,
                                 x1: startCoords.x,
@@ -126,7 +116,6 @@ export default function Connections({ nodes, nodeRefs }) {
             </defs>
             {lines.map(line => {
                 // Bezier Curve Logic
-                // Control points for smooth S-curve
                 const controlY1 = line.y1 + 40;
                 const controlY2 = line.y2 - 40;
                 const path = `M ${line.x1} ${line.y1} C ${line.x1} ${controlY1}, ${line.x2} ${controlY2}, ${line.x2} ${line.y2}`;
@@ -151,10 +140,6 @@ export default function Connections({ nodes, nodeRefs }) {
                                 dy="-5"
                                 style={{ background: 'white' }}
                             >
-                                {/* Background rect for text readability? SVG doesn't support background easily on text without filter or separate rect. 
-                        Let's rely on the CSS label for branches instead? 
-                        Actually, the user requirement 4 says "Clear labels for TRUE and FALSE"
-                    */}
                             </text>
                         )}
                     </g>

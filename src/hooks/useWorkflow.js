@@ -79,7 +79,7 @@ function workflowReducer(state, action) {
             id: newNodeId,
             type: "end",
             label: "End",
-            next: [] // End nodes technically don't have next, but keeping empty array is safe for consistency
+            next: []
           },
           [parentId]: {
             ...state.nodes[parentId],
@@ -146,7 +146,6 @@ function workflowReducer(state, action) {
     case "DELETE_NODE": {
       const { nodeId } = action.payload;
 
-      // Prevent deleting start node
       if (nodeId === state.rootId) return state;
 
       const nodesCopy = { ...state.nodes };
@@ -157,14 +156,12 @@ function workflowReducer(state, action) {
       for (const id in nodesCopy) {
         const node = nodesCopy[id];
 
-        // Action parent
         if (node.next?.includes(nodeId)) {
           parentId = id;
           parentNode = node;
           break;
         }
 
-        // Branch parent
         if (node.type === "branch") {
           for (const key in node.branches) {
             if (node.branches[key] === nodeId) {
@@ -185,14 +182,12 @@ function workflowReducer(state, action) {
       if (nodeToDelete.type === "action") {
         const childIds = nodeToDelete.next || [];
 
-        // Parent is action/start
         if (updatedParentNode.next) {
           updatedParentNode.next = updatedParentNode.next
             .filter(id => id !== nodeId)
             .concat(childIds);
         }
 
-        // Parent is branch
         if (updatedParentNode.type === "branch") {
           for (const key in updatedParentNode.branches) {
             if (updatedParentNode.branches[key] === nodeId) {
@@ -207,13 +202,11 @@ function workflowReducer(state, action) {
 
       // Handle End node deletion
       if (nodeToDelete.type === "end") {
-        // Parent is action/start
         if (updatedParentNode.next) {
           updatedParentNode.next = updatedParentNode.next
             .filter(id => id !== nodeId);
         }
 
-        // Parent is branch
         if (updatedParentNode.type === "branch") {
           for (const key in updatedParentNode.branches) {
             if (updatedParentNode.branches[key] === nodeId) {
@@ -237,14 +230,10 @@ function workflowReducer(state, action) {
             .concat(branchChildren);
         }
 
-        // Also handle case where parent is a branch (connected via branch prop)
+
         if (updatedParentNode.type === 'branch') {
           for (const key in updatedParentNode.branches) {
             if (updatedParentNode.branches[key] === nodeId) {
-              // If a branch is deleted, we might validly append its children? 
-              // Or just nullify? The logic for 'next' concatenation suggests we keep children.
-              // But for a branch slot, we can only fit one child. 
-              // So we take the first child or null.
               updatedParentNode.branches = {
                 ...updatedParentNode.branches,
                 [key]: branchChildren[0] || null
@@ -284,7 +273,7 @@ function workflowReducer(state, action) {
   }
 }
 
-// Undo/Redo Higher Order Reducer
+
 const undoable = (reducer) => {
   const initialState = {
     past: [],
@@ -300,7 +289,7 @@ const undoable = (reducer) => {
         const previous = past[past.length - 1];
         const newPast = past.slice(0, past.length - 1);
 
-        if (!previous) return state; // Can't undo
+        if (!previous) return state;
 
         return {
           past: newPast,
@@ -312,7 +301,7 @@ const undoable = (reducer) => {
         const next = future[0];
         const newFuture = future.slice(1);
 
-        if (!next) return state; // Can't redo
+        if (!next) return state;
 
         return {
           past: [...past, present],
@@ -321,16 +310,13 @@ const undoable = (reducer) => {
         };
 
       default:
-        // Delegate to inner reducer
         const newPresent = reducer(present, action);
-
-        // If specific actions didn't change state, return current state
         if (present === newPresent) return state;
 
         return {
           past: [...past, present],
           present: newPresent,
-          future: [] // Verify future is cleared on new action? Yes, standard pattern
+          future: []
         };
     }
   };
@@ -350,7 +336,7 @@ export function useWorkflow() {
   }, [state.present]);
 
   return {
-    state: state.present, // Unwrap for consumers
+    state: state.present,
     dispatch,
     undo,
     redo,

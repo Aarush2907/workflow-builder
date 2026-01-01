@@ -76,7 +76,7 @@
 /* Spacing and Layout */
 .node-children {
   margin-top: 60px;
-  /* Increased for connection line space */
+
   display: flex;
   gap: 80px;
 }
@@ -84,7 +84,7 @@
 .branch-children {
   display: flex;
   gap: 120px;
-  /* Wider gap for branches */
+
   margin-top: 60px;
 }
 
@@ -105,7 +105,7 @@
   border-radius: 12px;
   position: absolute;
   top: -45px;
-  /* Position on the line */
+
   z-index: 5;
 }
 
@@ -156,13 +156,13 @@
   cursor: pointer;
   transition: all 0.2s;
   margin-top: 8px;
-  /* Spacing from node body */
+
   position: absolute;
-  /* Float below */
+
   left: 50%;
   transform: translateX(-50%);
   bottom: -40px;
-  /* Position in the gap */
+
   z-index: 20;
 }
 
@@ -180,7 +180,7 @@
   gap: 4px;
   justify-content: center;
   opacity: 0;
-  /* Hide by default, show on hover */
+
   transition: opacity 0.2s;
 }
 
