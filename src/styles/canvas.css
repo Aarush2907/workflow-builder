@@ -1,10 +1,17 @@
 .canvas {
   min-height: 100vh;
-  padding: 40px;
+  min-width: 100vw;
+  padding: 80px;
+  background-color: #f8fafc;
+  background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size: 24px 24px;
+  box-sizing: border-box;
+  overflow: auto;
 }
 
 .canvas-content {
-  margin-top: 40px;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+  min-width: min-content;
 }

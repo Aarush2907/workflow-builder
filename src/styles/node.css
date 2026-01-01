@@ -1,113 +1,168 @@
 .node {
-  padding: 12px 20px;
-  background: #020617;
-  border: 1px solid #334155;
+  padding: 16px 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
-  min-width: 120px;
+  min-width: 160px;
   text-align: center;
-  color: #e5e7eb;
+  color: #1e293b;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  position: relative;
+  z-index: 10;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.node:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
 }
 
 .node-label {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  padding: 2px 6px;
+  padding: 4px 8px;
   border-radius: 4px;
   border: 1px solid transparent;
   transition: all 0.2s;
+  display: inline-block;
+  color: #334155;
 }
 
 .node-label:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: #f1f5f9;
+  border-color: #cbd5e1;
 }
 
 .node-input {
   font-size: 14px;
-  font-weight: 500;
-  padding: 2px 6px;
+  font-weight: 600;
+  padding: 4px 8px;
   border-radius: 4px;
-  border: 1px solid #10b981;
-  background: #0f172a;
-  color: #e5e7eb;
+  border: 2px solid #3b82f6;
+  background: #ffffff;
+  color: #1e293b;
   text-align: center;
   width: 100%;
   box-sizing: border-box;
   outline: none;
 }
 
-/* Special styling for start node */
+/* Node Types */
 .node-start {
-  background: #022c22;
-  border-color: #10b981;
+  border-top: 4px solid #10b981;
 }
 
+.node-action {
+  border-top: 4px solid #3b82f6;
+}
+
+.node-branch {
+  border-top: 4px solid #f59e0b;
+}
 
 .node-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
+/* Spacing and Layout */
 .node-children {
-  margin-top: 30px;
+  margin-top: 60px;
+  /* Increased for connection line space */
   display: flex;
-  gap: 40px;
-}
-
-.node-controls {
-  margin-top: 10px;
-}
-
-.node-controls button {
-  background: #1e293b;
-  color: #e5e7eb;
-  padding: 6px 10px;
-  border-radius: 4px;
-  font-size: 12px;
-}
-
-.node-controls button:hover {
-  background: #334155;
+  gap: 80px;
 }
 
 .branch-children {
   display: flex;
-  gap: 60px;
-  margin-top: 30px;
+  gap: 120px;
+  /* Wider gap for branches */
+  margin-top: 60px;
 }
 
 .branch-column {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
 .branch-label {
-  font-size: 12px;
-  margin-bottom: 10px;
-  color: #94a3b8;
-}
-.branch-add-btn {
-  background: #1e293b;
-  color: #e5e7eb;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 12px;
-  border: 1px dashed #475569;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 12px;
+  position: absolute;
+  top: -45px;
+  /* Position on the line */
+  z-index: 5;
 }
 
-.branch-add-btn:hover {
-  background: #334155;
+/* Controls */
+.node-controls {
+  margin-top: 12px;
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  opacity: 0;
+  /* Hide by default, show on hover */
+  transition: opacity 0.2s;
+}
+
+.node:hover .node-controls {
+  opacity: 1;
+}
+
+.node-controls button {
+  background: #f8fafc;
+  color: #475569;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.node-controls button:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+  border-color: #94a3b8;
 }
 
 .node-controls .danger {
-  background: #7f1d1d;
-  color: #fecaca;
+  color: #dc2626;
+  background: #fef2f2;
+  border-color: #fecaca;
 }
 
 .node-controls .danger:hover {
-  background: #991b1b;
+  background: #fee2e2;
+  border-color: #fca5a5;
 }
 
+/* Add Step Button (Branch) */
+.branch-add-btn {
+  background: white;
+  color: #64748b;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  border: 1px dashed #cbd5e1;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
+}
+
+.branch-add-btn:hover {
+  border-color: #94a3b8;
+  color: #334155;
+  background: #f8fafc;
+  transform: translateY(-1px);
+}

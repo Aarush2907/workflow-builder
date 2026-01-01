@@ -3,7 +3,7 @@ import Node from "./Node/Node";
 /**
  * Recursive node renderer
  */
-export default function RenderNode({ nodeId, nodes, dispatch }) {
+export default function RenderNode({ nodeId, nodes, dispatch, registerNode }) {
   const node = nodes[nodeId];
   if (!node) return null;
 
@@ -24,6 +24,7 @@ export default function RenderNode({ nodeId, nodes, dispatch }) {
   return (
     <div className="node-wrapper">
       <Node
+        nodeId={nodeId}
         label={node.label}
         type={node.type}
         onAddAction={node.type === "branch" ? null : addAction}
@@ -40,6 +41,7 @@ export default function RenderNode({ nodeId, nodes, dispatch }) {
             payload: { nodeId, label: newLabel }
           })
         }
+        registerNode={registerNode}
       />
 
       {/* ACTION children */}
@@ -51,6 +53,7 @@ export default function RenderNode({ nodeId, nodes, dispatch }) {
               nodeId={childId}
               nodes={nodes}
               dispatch={dispatch}
+              registerNode={registerNode}
             />
           ))}
         </div>
@@ -71,6 +74,7 @@ export default function RenderNode({ nodeId, nodes, dispatch }) {
                     nodeId={childId}
                     nodes={nodes}
                     dispatch={dispatch}
+                    registerNode={registerNode}
                   />
                 ) : (
                   <button

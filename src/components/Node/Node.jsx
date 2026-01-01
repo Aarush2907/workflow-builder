@@ -1,24 +1,37 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import NodeControls from "./NodeControls";
 import "../../styles/node.css";
 
 export default function Node({
+  nodeId,
   label,
   type,
   onAddAction,
   onAddBranch,
   onDelete,
-  onUpdateLabel
+  onUpdateLabel,
+  registerNode
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(label);
-  const inputRef = useRef(null);
+  const inputRef = useRef(null); // specific input ref
+  const nodeRef = useRef(null);  // container ref for connections
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
     }
   }, [isEditing]);
+
+  // Register node for connections
+  useLayoutEffect(() => {
+    if (registerNode && nodeRef.current) {
+      registerNode(nodeId, nodeRef.current);
+    }
+    return () => {
+      if (registerNode) registerNode(nodeId, null);
+    }
+  }, [nodeId, registerNode]);
 
   const handleStartEditing = () => {
     setEditValue(label);
@@ -44,7 +57,7 @@ export default function Node({
   };
 
   return (
-    <div className={`node node-${type}`}>
+    <div ref={nodeRef} className={`node node-${type}`}>
       {isEditing ? (
         <input
           ref={inputRef}
