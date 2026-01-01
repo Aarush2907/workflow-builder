@@ -1,8 +1,8 @@
-import { useReducer } from "react";
+
+import { useReducer, useCallback } from "react";
 import { generateNodeId } from "../utils/idGenerator";
 
-
-const initialState = {
+const initialWorkflowState = {
   nodes: {
     start: {
       id: "start",
@@ -13,7 +13,6 @@ const initialState = {
   },
   rootId: "start"
 };
-
 
 function workflowReducer(state, action) {
   switch (action.type) {
@@ -28,7 +27,7 @@ function workflowReducer(state, action) {
           [newNodeId]: {
             id: newNodeId,
             type: "action",
-            label: "New Action",
+            label: "Action",
             next: []
           },
           [parentId]: {
@@ -82,7 +81,7 @@ function workflowReducer(state, action) {
           [newNodeId]: {
             id: newNodeId,
             type: "action",
-            label: "New Action",
+            label: "Action",
             next: []
           },
 
@@ -208,7 +207,6 @@ function workflowReducer(state, action) {
       };
     }
 
-
     case "UPDATE_NODE_LABEL": {
       const { nodeId, label } = action.payload;
       return {
@@ -228,8 +226,78 @@ function workflowReducer(state, action) {
   }
 }
 
-export function useWorkflow() {
-  const [state, dispatch] = useReducer(workflowReducer, initialState);
+// Undo/Redo Higher Order Reducer
+const undoable = (reducer) => {
+  const initialState = {
+    past: [],
+    present: initialWorkflowState,
+    future: []
+  };
 
-  return { state, dispatch };
+  return function (state = initialState, action) {
+    const { past, present, future } = state;
+
+    switch (action.type) {
+      case "UNDO":
+        const previous = past[past.length - 1];
+        const newPast = past.slice(0, past.length - 1);
+
+        if (!previous) return state; // Can't undo
+
+        return {
+          past: newPast,
+          present: previous,
+          future: [present, ...future]
+        };
+
+      case "REDO":
+        const next = future[0];
+        const newFuture = future.slice(1);
+
+        if (!next) return state; // Can't redo
+
+        return {
+          past: [...past, present],
+          present: next,
+          future: newFuture
+        };
+
+      default:
+        // Delegate to inner reducer
+        const newPresent = reducer(present, action);
+
+        // If specific actions didn't change state, return current state
+        if (present === newPresent) return state;
+
+        return {
+          past: [...past, present],
+          present: newPresent,
+          future: [] // Verify future is cleared on new action? Yes, standard pattern
+        };
+    }
+  };
+};
+
+const rootReducer = undoable(workflowReducer);
+
+export function useWorkflow() {
+  const [state, dispatch] = useReducer(rootReducer, undefined, () => rootReducer(undefined, {}));
+
+  const undo = useCallback(() => dispatch({ type: "UNDO" }), []);
+  const redo = useCallback(() => dispatch({ type: "REDO" }), []);
+
+  const save = useCallback(() => {
+    console.log("WORKFLOW DATA:", JSON.stringify(state.present, null, 2));
+    alert("Workflow saved to console!");
+  }, [state.present]);
+
+  return {
+    state: state.present, // Unwrap for consumers
+    dispatch,
+    undo,
+    redo,
+    save,
+    canUndo: state.past.length > 0,
+    canRedo: state.future.length > 0
+  };
 }

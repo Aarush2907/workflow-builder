@@ -1,18 +1,18 @@
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
-import NodeControls from "./NodeControls";
+import PopoverMenu from "../PopoverMenu";
 import "../../styles/node.css";
 
 export default function Node({
   nodeId,
   label,
   type,
-  onAddAction,
-  onAddBranch,
   onDelete,
   onUpdateLabel,
-  registerNode
+  registerNode,
+  onAddStep
 }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [showPopover, setShowPopover] = useState(false);
   const [editValue, setEditValue] = useState(label);
   const inputRef = useRef(null); // specific input ref
   const nodeRef = useRef(null);  // container ref for connections
@@ -58,30 +58,58 @@ export default function Node({
 
   return (
     <div ref={nodeRef} className={`node node-${type}`}>
-      {isEditing ? (
-        <input
-          ref={inputRef}
-          className="node-input"
-          value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
-          onBlur={handleSave}
-          onKeyDown={handleKeyDown}
-        />
-      ) : (
-        <span
-          className="node-label"
-          onClick={handleStartEditing}
-          title="Click to edit"
-        >
-          {label}
-        </span>
-      )}
+      <div className="node-content">
+        {isEditing ? (
+          <input
+            ref={inputRef}
+            className="node-input"
+            value={editValue}
+            onChange={(e) => setEditValue(e.target.value)}
+            onBlur={handleSave}
+            onKeyDown={handleKeyDown}
+          />
+        ) : (
+          <span
+            className="node-label"
+            onClick={handleStartEditing}
+            title="Click to edit"
+          >
+            {label}
+          </span>
+        )}
 
-      <NodeControls
-        onAddAction={onAddAction}
-        onAddBranch={onAddBranch}
-        onDelete={type === "start" ? null : onDelete}
-      />
+        {/* Delete Button (Top Right) */}
+        {type !== "start" && (
+          <button
+            className="delete-btn"
+            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            title="Delete Node"
+          >
+            ×
+          </button>
+        )}
+      </div>
+
+      {/* Connection Point (Add Button) */}
+      {onAddStep && (
+        <div style={{ position: "relative" }}>
+          <button
+            className="add-point-btn"
+            onClick={() => setShowPopover(!showPopover)}
+            title="Add Step"
+          >
+            +
+          </button>
+
+          {showPopover && (
+            <PopoverMenu
+              position={{ x: -60, y: 15 }} // Relative to button
+              onClose={() => setShowPopover(false)}
+              onSelect={onAddStep}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }

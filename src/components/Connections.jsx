@@ -52,7 +52,7 @@ export default function Connections({ nodes, nodeRefs }) {
                 if (!startCoords) return;
 
                 // Connections from Actions/Start
-                if (node.next) {
+                if (node.type !== "branch" && node.next) {
                     node.next.forEach(childId => {
                         const endCoords = getCoords(childId);
                         if (endCoords) {

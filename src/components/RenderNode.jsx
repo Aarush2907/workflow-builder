@@ -27,8 +27,10 @@ export default function RenderNode({ nodeId, nodes, dispatch, registerNode }) {
         nodeId={nodeId}
         label={node.label}
         type={node.type}
-        onAddAction={node.type === "branch" ? null : addAction}
-        onAddBranch={node.type === "branch" ? null : addBranch}
+        onAddStep={(node.type === "branch" || (node.next && node.next.length > 0)) ? null : (type) => {
+          if (type === "action") addAction();
+          if (type === "branch") addBranch();
+        }}
         onDelete={() =>
           dispatch({
             type: "DELETE_NODE",
@@ -45,7 +47,7 @@ export default function RenderNode({ nodeId, nodes, dispatch, registerNode }) {
       />
 
       {/* ACTION children */}
-      {node.next && node.next.length > 0 && (
+      {node.type !== "branch" && node.next && node.next.length > 0 && (
         <div className="node-children">
           {node.next.map((childId) => (
             <RenderNode
